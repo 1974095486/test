@@ -25,6 +25,7 @@ import { useStore } from 'vuex'
 import { useRouter, useRoute } from 'vue-router'
 import ValidateInput, { RulesProp } from '../components/ValidateInput.vue'
 import ValidateForm from '../components/ValidateForm.vue'
+import { GlobalDataProps } from '../store'
 export default defineComponent({
   name: 'LoGin',
   components: {
@@ -34,18 +35,24 @@ export default defineComponent({
   setup() {
     const titleVal = ref('')
     const router = useRouter()
-    const route = useRoute()
-    const isEditMode = !!route.query.id
+    const store = useStore<GlobalDataProps>()
     const titleRules: RulesProp = [{ type: 'required', message: '文章标题不能为空' }]
     const contentVal = ref('')
     const contentRules: RulesProp = [{ type: 'required', message: '文章详情不能为空' }]
+
+    const onFormSubmit = (result: boolean) => {
+      if (result) {
+        router.push('/')
+        store.commit('login')
+      }
+    }
 
     return {
       titleRules,
       titleVal,
       contentVal,
       contentRules,
-      isEditMode
+      onFormSubmit
     }
   }
 })
